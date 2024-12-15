@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "@waline/vercel": "1.32.3",
-    "twikoo-vercel": "1.6.40"
+    "@waline/vercel": "1.32.2"
   }
 }
