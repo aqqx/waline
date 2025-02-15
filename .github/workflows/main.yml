@@ -1,5 +1,4 @@
 name: Update and Sync Repositories
-
 on:
   schedule:
     - cron: '0 */6 * * *'
@@ -8,27 +7,28 @@ on:
 jobs:
   update_release:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Get @waline/vercel version
-      id: get_version
-      run: |
-        echo "Fetching @waline/vercel version from waline repository"
-        version=$(curl -s https://raw.githubusercontent.com/walinejs/waline/main/packages/server/package.json | jq -r '.version')
-        echo "version=$version" >> $GITHUB_ENV
+      - name: Get @waline/vercel version
+        id: get_version
+        run: |
+          echo "Fetching @waline/vercel version from waline repository"
+          version=$(curl -s https://raw.githubusercontent.com/walinejs/waline/main/packages/server/package.json | jq -r '.version')
+          echo "version=$version" >> $GITHUB_ENV
 
-    - name: Update package.json
-      run: |
-        echo "Updating @waline/vercel version to ${{ env.version }}"
-        jq --arg version "${{ env.version }}" '.dependencies["@waline/vercel"] = $version' package.json > tmp.$$.json && mv tmp.$$.json package.json
+      - name: Update package.json
+        run: |
+          echo "Updating @waline/vercel version to ${{ env.version }}"
+          jq --arg version "${{ env.version }}" '.dependencies["@waline/vercel"] = $version' package.json > tmp.json && mv tmp.json package.json
 
-    - name: Commit changes
-      run: |
-        git config user.name "GitHub Action"
-        git config user.email "action@github.com"
-        git add package.json
-        git diff-index --quiet HEAD || git commit -m "v${{ env.version }}"
-        git push
+      - name: Commit changes
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git add package.json
+          if ! git diff --cached --quiet; then
+            git commit -m "v${{ env.version }}"
+            git push
+          fi
