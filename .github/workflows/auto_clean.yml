@@ -3,15 +3,15 @@ on:
   workflow_dispatch:
     inputs:
       days:
-        description: '每个工作流程需要保留的天数'
+        description: '每个工作流需保留的天数'
         required: true
         default: '30'
       minimum_runs:
-        description: '每个工作流程需要保留的最少运行次数'
+        description: '每个工作流需保留的最小运行次数'
         required: true
         default: '6'
       delete_workflow_pattern:
-        description: '工作流程的名称或文件名(如果未设置,则针对所有工作流程)'
+        description: '工作流名称或文件名（未设置时匹配所有工作流）'
         required: false
       delete_workflow_by_state_pattern:
         description: '按状态筛选工作流：active, deleted, disabled_fork, disabled_inactivity, disabled_manually'
@@ -25,7 +25,7 @@ on:
           - disabled_inactivity
           - disabled_manually
       delete_run_by_conclusion_pattern:
-        description: '根据结论删除运行:action_required, cancelled, failure, skipped, success'
+        description: '根据运行结果删除实例：需操作、已取消、失败、跳过、成功'
         required: true
         default: "ALL"
         type: choice
@@ -38,7 +38,7 @@ on:
           - skipped
           - success
       dry_run:
-        description: '记录模拟更改,不执行删除操作'
+        description: '记录模拟变更，不执行实际删除'
         required: false
 
 jobs:
